@@ -1,0 +1,84 @@
+# Maintainer: artoo <artoo@manjaro.org>
+
+_pkgbase=artools
+_ver=0.1
+_branch=devel
+
+pkgbase=artools-git
+pkgname=('artools-base-git'
+        'artools-pkg-git'
+        'artools-iso-git'
+        'artools-yaml-git')
+pkgver=r3.b00411f
+pkgrel=1
+arch=('any')
+pkgdesc='Development tools for Cromnix'
+license=('GPL')
+groups=('artools')
+url='https://github.com/cromnix/artools'
+makedepends=('git' 'docbook2x')
+source=("git+$url.git#branch=$_branch")
+sha256sums=('SKIP')
+
+prepare() {
+    cd ${srcdir}/${_pkgbase}
+    # patches here
+    sed -e "s/^Version=.*/Version=$_ver/" -i Makefile
+    #sed -e "s/^Version=.*/Version=$pkgver/" -i Makefile
+}
+
+pkgver() {
+    cd ${srcdir}/${_pkgbase}
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd ${srcdir}/${_pkgbase}
+    make SYSCONFDIR=/etc PREFIX=/usr
+}
+
+package_artools-base-git() {
+    pkgdesc='Development tools for Cromnix (base tools)'
+    provides=("artools-base=$_ver")
+    depends=('openssh' 'rsync' 'haveged' 'os-prober' 'gnupg' 'pacman-mirrorlist>=20160301')
+    optdepends=('artools-pkg: Cromnix package tools'
+                'artools-iso: Cromnix iso tools'
+                'artools-yaml: Cromnix yaml tools')
+    conflicts=('artools-base')
+    backup=('etc/artools/artools.conf')
+
+    cd ${srcdir}/${_pkgbase}
+    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_base
+}
+
+package_artools-pkg-git() {
+    pkgdesc='Development tools for Cromnix (packaging tools)'
+    provides=("artools-pkg=$_ver")
+    depends=('namcap' 'artools-base-git')
+    conflicts=('artools-pkg' 'devtools')
+
+    cd ${srcdir}/${_pkgbase}
+    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_pkg
+}
+
+package_artools-yaml-git() {
+    pkgdesc='Development tools for Cromnix (yaml tools)'
+    provides=("artools-yaml=$_ver")
+    conflicts=('artools-yaml')
+    depends=('artools-base-git' 'calamares-tools' 'ruby-kwalify' 'iso-profiles-base')
+
+    cd ${srcdir}/${_pkgbase}
+    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_yaml
+}
+
+package_artools-iso-git() {
+    pkgdesc='Development tools for Cromnix (ISO tools)'
+	provides=("artools-iso=$_ver")
+    depends=('dosfstools' 'libisoburn' 'squashfs-tools' 'artools-yaml-git'
+            'mkinitcpio' 'mktorrent' 'grub')
+	conflicts=('artools-iso')
+
+	cd ${srcdir}/${_pkgbase}
+	make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_iso
+}
+
