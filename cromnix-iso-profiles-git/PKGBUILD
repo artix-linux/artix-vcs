@@ -20,7 +20,7 @@ pkgver() {
 
 _inst_dir(){
     install -d $pkgdir/usr/share/artools/iso-profiles
-    cp -a $srcdir/iso-profiles/$1 $pkgdir/usr/share/artools/iso-profiles/
+    cp -a $srcdir/${pkgbase}/$1 $pkgdir/usr/share/artools/iso-profiles/
 }
 
 package_cromnix-iso-profiles-base-git() {
@@ -30,7 +30,7 @@ package_cromnix-iso-profiles-base-git() {
 
     _inst_dir 'shared'
 
-    cp $srcdir/iso-profiles/repo_info $pkgdir/usr/share/artools/iso-profiles/
+    cp $srcdir/${pkgbase}/repo_info $pkgdir/usr/share/artools/iso-profiles/
 }
 
 package_cromnix-iso-profiles-git() {
