@@ -40,7 +40,7 @@ build() {
 package_artools-base-git() {
     pkgdesc='Development tools for Cromnix (base tools)'
     provides=("artools-base=$_ver")
-    depends=('openssh' 'rsync' 'haveged' 'os-prober' 'gnupg' 'pacman-mirrorlist>=20160301')
+    depends=('openssh' 'rsync' 'haveged' 'os-prober' 'gnupg' 'mirrorlist>=20160301')
     optdepends=('artools-pkg: Cromnix package tools'
                 'artools-iso: Cromnix iso tools'
                 'artools-yaml: Cromnix yaml tools')
