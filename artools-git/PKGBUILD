@@ -9,12 +9,12 @@ pkgname=('artools-base-git'
         'artools-pkg-git'
         'artools-iso-git'
         'artools-yaml-git')
-pkgver=r5.2655eed
+pkgver=r13.2b0b1a9
 pkgrel=1
 arch=('any')
 pkgdesc='Development tools for Cromnix'
 license=('GPL')
-groups=('artools')
+groups=('artools-git')
 url='https://github.com/cromnix/artools'
 makedepends=('git' 'docbook2x')
 source=("git+$url.git#branch=$_branch")
