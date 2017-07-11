@@ -2,15 +2,15 @@
 
 _pkgbase=artools
 _ver=0.1
-_branch=devel
+_branch=artix
 
 pkgbase=artools-git
 pkgname=('artools-base-git'
         'artools-pkg-git'
         'artools-iso-git'
         'artools-yaml-git')
-pkgver=r5.2655eed
-pkgrel=1
+pkgver=r18.3ff988c
+pkgrel=2
 arch=('any')
 pkgdesc='Development tools for Cromnix'
 license=('GPL')
@@ -40,7 +40,7 @@ build() {
 package_artools-base-git() {
     pkgdesc='Development tools for Cromnix (base tools)'
     provides=("artools-base=$_ver")
-    depends=('openssh' 'rsync' 'haveged' 'os-prober' 'gnupg' 'pacman-mirrorlist>=20160301')
+    depends=('openssh' 'rsync' 'haveged' 'os-prober' 'gnupg' 'pacman')
     optdepends=('artools-pkg: Cromnix package tools'
                 'artools-iso: Cromnix iso tools'
                 'artools-yaml: Cromnix yaml tools')
@@ -65,7 +65,8 @@ package_artools-yaml-git() {
     pkgdesc='Development tools for Cromnix (yaml tools)'
     provides=("artools-yaml=$_ver")
     conflicts=('artools-yaml')
-    depends=('artools-base-git' 'calamares-tools' 'ruby-kwalify' 'iso-profiles-base')
+#     depends=('artools-base-git' 'calamares-tools' 'ruby-kwalify' 'iso-profiles-base')
+    depends=('artools-base-git' 'iso-profiles-base')
 
     cd ${srcdir}/${_pkgbase}
     make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_yaml
