@@ -1,0 +1,99 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=openrc-git
+pkgver=r2894.1e837d59
+pkgrel=1
+pkgdesc="An init and service control software"
+arch=('x86_64')
+url="http://www.gentoo.org/proj/en/base/openrc/"
+license=('BSD2')
+depends=('kbd' 'procps-ng' 'psmisc')
+makedepends=('git')
+conflicts=('openrc')
+provides=('openrc')
+backup=('etc/openrc/rc.conf'
+        'etc/openrc/conf.d/bootmisc'
+        'etc/openrc/conf.d/consolefont'
+        'etc/openrc/conf.d/devfs'
+        'etc/openrc/conf.d/dmesg'
+        'etc/openrc/conf.d/fsck'
+        'etc/openrc/conf.d/hostname'
+        'etc/openrc/conf.d/hwclock'
+        'etc/openrc/conf.d/keymaps'
+        'etc/openrc/conf.d/killprocs'
+        'etc/openrc/conf.d/localmount'
+        'etc/openrc/conf.d/modules'
+        'etc/openrc/conf.d/mtab'
+        'etc/openrc/conf.d/netmount'
+        'etc/openrc/conf.d/net-online'
+        'etc/openrc/conf.d/network'
+        'etc/openrc/conf.d/staticroute'
+        'etc/openrc/conf.d/swap'
+        'etc/openrc/conf.d/urandom')
+source=("git+https://github.com/OpenRC/openrc.git"
+		'openrc.logrotate')
+md5sums=('SKIP'
+         '0d8a00d30812ec460ef8c32a96372c31')
+
+_args=(
+    SYSCONFDIR=/etc/openrc
+    LIBEXECDIR=/usr/lib/openrc
+    BRANDING="Cromnix"
+	MKSYSVINIT=yes
+    MKTERMCAP=ncurses
+)
+
+pkgver() {
+	cd "openrc"
+	#printf "r%s.%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)" "$(date +%Y%m%d)"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "$srcdir/openrc"
+    make ${_args[@]}
+}
+
+check() {
+    cd "$srcdir/openrc"
+    make check
+}
+
+package() {
+	groups=('init' 'rc')
+    cd "$srcdir/openrc"
+
+	mkdir -pv "${pkgdir}"/usr/{bin,lib}
+	ln -sv usr/bin "${pkgdir}/bin"
+	ln -sv usr/bin "${pkgdir}/sbin"
+	ln -sv usr/lib "${pkgdir}/lib"
+
+    make DESTDIR="$pkgdir" ${_args[@]} install
+
+    install -d ${pkgdir}/usr/lib/openrc/cache
+    
+    install -Dm644 ${srcdir}/openrc.logrotate ${pkgdir}/etc/logrotate.d/openrc
+
+    install -Dm644 ${srcdir}/openrc/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+
+	# remove sysvinit compat files
+	rm "${pkgdir}"/usr/bin/{init,reboot,halt,poweroff,shutdown}
+	
+	# fix broken symlink
+	ln -svf /usr/lib/openrc/bin/rc-sstat "${pkgdir}"/usr/bin/rc-sstat
+
+    # agetty support
+    for i in `seq 1 6`; do
+		ln -sv agetty ${pkgdir}/etc/openrc/init.d/agetty.tty${i}
+		cp ${pkgdir}/etc/openrc/conf.d/agetty ${pkgdir}/etc/openrc/conf.d/agetty.tty${i}
+		ln -sv /etc/openrc/init.d/agetty.tty${i} ${pkgdir}/etc/openrc/runlevels/default/agetty.tty${i}
+
+		sed -e 's/#baud=""/baud="38400"/' -i ${pkgdir}/etc/openrc/conf.d/agetty.tty${i}
+		sed -e 's/#term_type="linux"/term_type="linux"/' -i ${pkgdir}/etc/openrc/conf.d/agetty.tty${i}
+		if [ ${i} -eq 1 ]; then
+			sed -e 's/#agetty_options=""/agetty_options="--noclear"/' -i ${pkgdir}/etc/openrc/conf.d/agetty.tty${i}
+		fi
+	done
+
+    rm "${pkgdir}"/{bin,sbin,lib}
+}

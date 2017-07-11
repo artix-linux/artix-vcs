@@ -14,7 +14,7 @@ pkgrel=1
 arch=('any')
 pkgdesc='Development tools for Cromnix'
 license=('GPL')
-groups=('artools')
+groups=('artools-git')
 url='https://github.com/cromnix/artools'
 makedepends=('git' 'docbook2x')
 source=("git+$url.git#branch=$_branch")
