@@ -6,3 +6,4 @@
 *.src.tar.gz
 *.src.tar.xz
 *.sig
+*.log

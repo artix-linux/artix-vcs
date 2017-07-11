@@ -9,8 +9,8 @@ pkgname=('artools-base-git'
         'artools-pkg-git'
         'artools-iso-git'
         'artools-yaml-git')
-pkgver=r18.3ff988c
-pkgrel=2
+pkgver=r23.4326357
+pkgrel=1
 arch=('any')
 pkgdesc='Development tools for Cromnix'
 license=('GPL')
