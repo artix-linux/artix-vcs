@@ -1,16 +1,17 @@
 # Maintainer: artoo <artoo@manjaro.org>
 
 _toolsver=0.1
+_branch=devel
 
 pkgbase=iso-profiles
 pkgname=('cromnix-iso-profiles-base-git'
         'cromnix-iso-profiles-git')
-pkgver=r4.12a3c71
+pkgver=r5.eef4607
 pkgrel=1
 arch=('any')
 url="https://github.com/cromnix/iso-profiles"
 license=('GPL')
-source=("git+$url.git#branch=devel")
+source=("git+$url.git#branch=$_branch")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -25,8 +26,8 @@ _inst_dir(){
 
 package_cromnix-iso-profiles-base-git() {
     pkgdesc='Cromnix iso profiles base'
-    provides=('iso-profiles-base')
-    conflicts=('iso-profiles-base')
+    provides=("artools-base-iso=$pkgver")
+    conflicts=('cromnix-iso-profiles-base')
 
     _inst_dir 'shared'
 
@@ -35,9 +36,9 @@ package_cromnix-iso-profiles-base-git() {
 
 package_cromnix-iso-profiles-git() {
     pkgdesc='Cromnix iso profiles'
-    groups=('artools')
+#     groups=('artools')
     provides=('iso-profiles')
-    conflicts=('iso-profiles')
+    conflicts=('cromnix-iso-profiles')
 #     depends=("artools-yaml>=${_toolsver}")
 
     _inst_dir 'lxqt'
