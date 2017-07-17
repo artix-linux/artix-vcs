@@ -9,7 +9,7 @@ pkgname=('artools-base-git'
         'artools-pkg-git'
         'artools-iso-git'
         'artools-yaml-git')
-pkgver=r46.3fe0f3f
+pkgver=r47.8365754
 pkgrel=1
 arch=('any')
 pkgdesc='Development tools for Artix'
