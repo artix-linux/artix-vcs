@@ -9,7 +9,7 @@ pkgname=('artools-iso-base'
 pkgver=0.1
 pkgrel=1
 arch=('any')
-url="https://github.com/cromnix/iso-profiles"
+url="https://github.com/artix-linux/iso-profiles"
 license=('GPL')
 makedepends=('git')
 source=("git+$url.git#branch=${_branch}")

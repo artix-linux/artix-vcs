@@ -4,12 +4,12 @@ _toolsver=0.1
 _branch=devel
 
 pkgbase=iso-profiles
-pkgname=('cromnix-iso-profiles-base-git'
-        'cromnix-iso-profiles-git')
+pkgname=('artix-iso-profiles-base-git'
+        'artix-iso-profiles-git')
 pkgver=r5.eef4607
 pkgrel=1
 arch=('any')
-url="https://github.com/cromnix/iso-profiles"
+url="https://github.com/artix-linux/iso-profiles"
 license=('GPL')
 source=("git+$url.git#branch=$_branch")
 sha256sums=('SKIP')
@@ -24,21 +24,21 @@ _inst_dir(){
     cp -a $srcdir/${pkgbase}/$1 $pkgdir/usr/share/artools/iso-profiles/
 }
 
-package_cromnix-iso-profiles-base-git() {
+package_artix-iso-profiles-base-git() {
     pkgdesc='Cromnix iso profiles base'
     provides=("artools-base-iso=$pkgver")
-    conflicts=('cromnix-iso-profiles-base')
+    conflicts=('artix-iso-profiles-base')
 
     _inst_dir 'shared'
 
     cp $srcdir/${pkgbase}/repo_info $pkgdir/usr/share/artools/iso-profiles/
 }
 
-package_cromnix-iso-profiles-git() {
+package_artix-iso-profiles-git() {
     pkgdesc='Cromnix iso profiles'
 #     groups=('artools')
     provides=('iso-profiles')
-    conflicts=('cromnix-iso-profiles')
+    conflicts=('artix-iso-profiles')
 #     depends=("artools-yaml>=${_toolsver}")
 
     _inst_dir 'lxqt'

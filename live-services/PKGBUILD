@@ -11,7 +11,7 @@ pkgver=0.1
 pkgrel=1
 pkgdesc='Artix live session'
 arch=('any')
-url="https://github.com/cromnix/live-services"
+url="https://github.com/artix-linux/live-services"
 license=('GPL')
 makedepends=('git')
 source=("git+$url.git#branch=$_branch")

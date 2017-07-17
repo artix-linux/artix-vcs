@@ -9,7 +9,7 @@ pkgver=0.1
 pkgrel=4
 pkgdesc='Artix grub theme'
 arch=('any')
-url="https://github.com/cromnix/grub-theme"
+url="https://github.com/artix-linux/grub-theme"
 license=('GPL')
 makedepends=('git')
 source=("git+$url.git#branch=$_branch")

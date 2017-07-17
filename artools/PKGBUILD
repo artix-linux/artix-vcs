@@ -11,10 +11,10 @@ pkgname=('artools-base'
 pkgver=0.2
 pkgrel=1
 arch=('any')
-pkgdesc='Development tools for Cromnix'
+pkgdesc='Development tools for Artix'
 license=('GPL')
 groups=('artools')
-url='https://github.com/cromnix/artools'
+url='https://github.com/artix-linux/artools'
 makedepends=('git' 'docbook2x')
 source=("git+$url.git#branch=$_branch")
 sha256sums=('SKIP')
@@ -31,11 +31,11 @@ build() {
 }
 
 package_artools-base() {
-    pkgdesc='Development tools for Cromnix (base tools)'
+    pkgdesc='Development tools for Artix (base tools)'
     depends=('openssh' 'rsync' 'haveged' 'os-prober' 'gnupg' 'pacman')
-    optdepends=('artools-pkg: Cromnix package tools'
-                'artools-iso: Cromnix iso tools'
-                'artools-yaml: Cromnix yaml tools')
+    optdepends=('artools-pkg: Artix package tools'
+                'artools-iso: Artix iso tools'
+                'artools-yaml: Artix yaml tools')
     backup=('etc/artools/artools.conf')
 
     cd ${srcdir}/${pkgbase}
@@ -43,7 +43,7 @@ package_artools-base() {
 }
 
 package_artools-pkg() {
-    pkgdesc='Development tools for Cromnix (packaging tools)'
+    pkgdesc='Development tools for Artix (packaging tools)'
     depends=('artools-base' 'namcap')
 
     cd ${srcdir}/${pkgbase}
@@ -51,7 +51,7 @@ package_artools-pkg() {
 }
 
 package_artools-yaml() {
-    pkgdesc='Development tools for Cromnix (yaml tools)'
+    pkgdesc='Development tools for Artix (yaml tools)'
     depends=('artools-base' 'iso-profiles-base') # 'calamares-tools' 'ruby-kwalify'
 
     cd ${srcdir}/${pkgbase}
@@ -59,7 +59,7 @@ package_artools-yaml() {
 }
 
 package_artools-iso() {
-    pkgdesc='Development tools for Cromnix (ISO tools)'
+    pkgdesc='Development tools for Artix (ISO tools)'
     depends=('artools-yaml' 'dosfstools' 'libisoburn' 'squashfs-tools' 'mkinitcpio' 'mktorrent' 'grub')
 
     cd ${srcdir}/${pkgbase}
