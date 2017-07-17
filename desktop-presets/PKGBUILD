@@ -1,0 +1,52 @@
+# Maintainer: artoo <artoo@cromnix.org>
+# Contributor: Philip Müller <philm[at]manjaro[dog]org>
+
+_branch=devel
+
+pkgbase=desktop-presets
+pkgname=(
+        'artix-backgrounds'
+#         'artix-lxqt-basic-presets'
+#         'artix-lxqt-extra-presets'
+)
+pkgver=20170715
+pkgrel=1
+arch=('any')
+url="https://github.com/cromnix/desktop-presets"
+license=('GPL')
+makedepends=('git')
+source=("git+$url.git#branch=$_branch")
+sha256sums=('SKIP')
+
+_inst_dir(){
+    install -d $pkgdir/etc
+    cp -r $srcdir/$pkgbase/$1/skel $pkgdir/etc
+}
+
+pkgver() {
+    date +%Y%m%d
+}
+
+package_artix-backgrounds(){
+    pkgdesc='Artix backgrounds'
+
+    install -Dm755 $srcdir/$pkgbase/backgrounds/artix.png ${pkgdir}/usr/share/backgrounds/artix.png
+}
+
+package_artix-lxqt-basic-presets() {
+    pkgdesc='Artix lxqt basic presets'
+    depends=('breeze-icons'
+            'breeze-gtk'
+            'artix-backgrounds')
+    provides=('desktop-presets')
+    conflicts=('desktop-presets')
+
+    _inst_dir 'lxqt/basic'
+}
+
+package_artix-lxqt-extra-presets() {
+    pkgdesc='Artix lxqt extra presets'
+    depends=('lxqt-basic-presets')
+
+    _inst_dir 'lxqt/extra'
+}

@@ -1,0 +1,27 @@
+# Maintainer: artoo <artoo@cromnix.org>
+
+_dist=artix
+
+pkgname=artix-sddm-theme
+pkgver=0.1
+pkgrel=1
+pkgdesc="Artix theme for SDDM"
+arch=('any')
+url="http://cromnix.org"
+license=('GPL')
+depends=('sddm' "${_dist}-backgrounds")
+install=artix-sddm-theme.install
+source=(theme.conf rectangle.png metadata.desktop angle-down.png Main.qml)
+sha256sums=('8dce8d1d7aeb65ebef12177e3eca5ed698069d5bbd7272dea163ecf98fc8f258'
+            'def18f2628aba173a9534c655642dd5735d9daa6afaa37b5875bfa53e2039c81'
+            'fce336921eda7b9cecea5e5c0ec2f47a209b47029f1f722e7f1bbc8862c1b18e'
+            'f391285b6ed8a3408c4f7ea2bb13b5c7f4ac546cb4e3a8188d7b2182b2dc47ad'
+            '7e3b1063fa071e0fa21e5a280f1f22382fb63d00b5080f05e1f1862e7d09839e')
+
+package() {
+
+    install -d ${pkgdir}/usr/share/sddm/themes/${_dist}
+    cp $srcdir/*.{png,desktop,conf,qml} ${pkgdir}/usr/share/sddm/themes/${_dist}
+
+    sed -e "s|@name@|${_dist}|" -i ${pkgdir}/usr/share/sddm/themes/${_dist}/theme.conf
+}

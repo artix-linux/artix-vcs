@@ -1,0 +1,1 @@
+/var/build/pkg/artix-sddm-theme-0.1-1-any.pkg.tar.xz.sig

@@ -1,0 +1,1 @@
+/var/build/pkg/artix-grub-theme-0.1-4-any.pkg.tar.xz.sig

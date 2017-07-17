@@ -1,0 +1,68 @@
+# Maintainer: artoo <artoo@manjaro.org>
+
+_branch=devel
+_commit=
+
+pkgbase=artools
+pkgname=('artools-base'
+        'artools-pkg'
+        'artools-iso'
+        'artools-yaml')
+pkgver=0.2
+pkgrel=1
+arch=('any')
+pkgdesc='Development tools for Cromnix'
+license=('GPL')
+groups=('artools')
+url='https://github.com/cromnix/artools'
+makedepends=('git' 'docbook2x')
+source=("git+$url.git#branch=$_branch")
+sha256sums=('SKIP')
+
+prepare() {
+    cd ${srcdir}/${pkgbase}
+    # patches here
+    sed -e "s/^Version=.*/Version=$pkgver/" -i Makefile
+}
+
+build() {
+    cd ${srcdir}/${pkgbase}
+    make SYSCONFDIR=/etc PREFIX=/usr
+}
+
+package_artools-base() {
+    pkgdesc='Development tools for Cromnix (base tools)'
+    depends=('openssh' 'rsync' 'haveged' 'os-prober' 'gnupg' 'pacman')
+    optdepends=('artools-pkg: Cromnix package tools'
+                'artools-iso: Cromnix iso tools'
+                'artools-yaml: Cromnix yaml tools')
+    backup=('etc/artools/artools.conf')
+
+    cd ${srcdir}/${pkgbase}
+    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_base
+}
+
+package_artools-pkg() {
+    pkgdesc='Development tools for Cromnix (packaging tools)'
+    depends=('artools-base' 'namcap')
+
+    cd ${srcdir}/${pkgbase}
+    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_pkg
+}
+
+package_artools-yaml() {
+    pkgdesc='Development tools for Cromnix (yaml tools)'
+    depends=('artools-base' 'iso-profiles-base') # 'calamares-tools' 'ruby-kwalify'
+
+    cd ${srcdir}/${pkgbase}
+    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_yaml
+}
+
+package_artools-iso() {
+    pkgdesc='Development tools for Cromnix (ISO tools)'
+    depends=('artools-yaml' 'dosfstools' 'libisoburn' 'squashfs-tools' 'mkinitcpio' 'mktorrent' 'grub')
+
+    cd ${srcdir}/${pkgbase}
+    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_iso
+}
+

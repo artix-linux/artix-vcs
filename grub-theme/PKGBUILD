@@ -1,0 +1,29 @@
+# Maintainer: artoo <artoo@cromnix.org>
+# Contributor: Philip Müller <philm[at]manjaro[dog]org>
+
+_branch=devel
+
+pkgbase=artix-grub-theme
+pkgname=('artix-grub-theme-common' 'artix-grub-theme')
+pkgver=0.1
+pkgrel=4
+pkgdesc='Artix grub theme'
+arch=('any')
+url="https://github.com/cromnix/grub-theme"
+license=('GPL')
+makedepends=('git')
+source=("git+$url.git#branch=$_branch")
+sha256sums=('SKIP')
+
+package_artix-grub-theme-common() {
+    depends=('grub')
+
+    cd grub-theme
+    make PREFIX=/usr DESTDIR=${pkgdir} install_common
+}
+package_artix-grub-theme() {
+    depends=('artix-grub-theme-common')
+
+    cd grub-theme
+    make PREFIX=/usr DESTDIR=${pkgdir} install_artix
+}
