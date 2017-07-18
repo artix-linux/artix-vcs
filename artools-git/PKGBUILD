@@ -1,21 +1,21 @@
 # Maintainer: artoo <artoo@manjaro.org>
 
 _pkgbase=artools
-_ver=0.1
-_branch=artix
+_ver=0.3
+_branch=devel
 
 pkgbase=artools-git
 pkgname=('artools-base-git'
         'artools-pkg-git'
         'artools-iso-git'
         'artools-yaml-git')
-pkgver=r23.4326357
+pkgver=r63.1e4d2b7
 pkgrel=1
 arch=('any')
-pkgdesc='Development tools for Cromnix'
+pkgdesc='Development tools for Artix'
 license=('GPL')
 groups=('artools-git')
-url='https://github.com/cromnix/artools'
+url='https://github.com/artix-linux/artools'
 makedepends=('git' 'docbook2x')
 source=("git+$url.git#branch=$_branch")
 sha256sums=('SKIP')
@@ -38,12 +38,12 @@ build() {
 }
 
 package_artools-base-git() {
-    pkgdesc='Development tools for Cromnix (base tools)'
+    pkgdesc='Development tools for Artix (base tools)'
     provides=("artools-base=$_ver")
     depends=('openssh' 'rsync' 'haveged' 'os-prober' 'gnupg' 'pacman')
-    optdepends=('artools-pkg: Cromnix package tools'
-                'artools-iso: Cromnix iso tools'
-                'artools-yaml: Cromnix yaml tools')
+    optdepends=('artools-pkg: Artix package tools'
+                'artools-iso: Artix iso tools'
+                'artools-yaml: Artix yaml tools')
     conflicts=('artools-base')
     backup=('etc/artools/artools.conf')
 
@@ -52,7 +52,7 @@ package_artools-base-git() {
 }
 
 package_artools-pkg-git() {
-    pkgdesc='Development tools for Cromnix (packaging tools)'
+    pkgdesc='Development tools for Artix (packaging tools)'
     provides=("artools-pkg=$_ver")
     depends=('namcap' 'artools-base-git')
     conflicts=('artools-pkg' 'devtools')
@@ -62,18 +62,17 @@ package_artools-pkg-git() {
 }
 
 package_artools-yaml-git() {
-    pkgdesc='Development tools for Cromnix (yaml tools)'
+    pkgdesc='Development tools for Artix (yaml tools)'
     provides=("artools-yaml=$_ver")
     conflicts=('artools-yaml')
-#     depends=('artools-base-git' 'calamares-tools' 'ruby-kwalify' 'iso-profiles-base')
-    depends=('artools-base-git' 'iso-profiles-base')
+    depends=('artools-base-git' 'artools-iso-base')
 
     cd ${srcdir}/${_pkgbase}
     make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_yaml
 }
 
 package_artools-iso-git() {
-    pkgdesc='Development tools for Cromnix (ISO tools)'
+    pkgdesc='Development tools for Artix (ISO tools)'
     provides=("artools-iso=$_ver")
     depends=('dosfstools' 'libisoburn' 'squashfs-tools' 'artools-yaml-git'
             'mkinitcpio' 'mktorrent' 'grub')
