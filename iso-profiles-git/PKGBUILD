@@ -1,0 +1,43 @@
+# Maintainer: artoo <artoo@manjaro.org>
+
+_pkgbase=artools
+_ver=0.3
+_branch=devel
+
+pkgbase=iso-profiles
+pkgname=('artools-iso-base-git'
+        'artix-iso-profiles-git'
+)
+pkgver=r32.597b240
+pkgrel=1
+arch=('any')
+pkgdesc='Artix iso profiles'
+license=('GPL')
+# groups=('artools-git')
+url='https://github.com/artix-linux/iso-profiles'
+makedepends=('git')
+source=("git+$url.git#branch=$_branch")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd ${srcdir}/${pkgbase}
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package_artools-iso-base-git() {
+    pkgdesc='Artix iso profiles base'
+    conflicts=('artools-iso-base')
+
+    cd ${pkgbase} #-${pkgver}
+    make PREFIX=/usr DESTDIR=${pkgdir} install_shared
+}
+
+package_artix-iso-profiles-git() {
+    pkgdesc='Artix iso profiles'
+    groups=('artools')
+    depends=("artools-yaml>=0.2")
+    conflicts=('artix-iso-profiles')
+
+    cd ${pkgbase} #-${pkgver}
+    make PREFIX=/usr DESTDIR=${pkgdir} install_profiles
+}

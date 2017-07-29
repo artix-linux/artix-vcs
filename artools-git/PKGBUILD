@@ -1,7 +1,7 @@
 # Maintainer: artoo <artoo@manjaro.org>
 
 _pkgbase=artools
-_ver=0.3
+_ver=0.4
 _branch=devel
 
 pkgbase=artools-git
@@ -9,7 +9,7 @@ pkgname=('artools-base-git'
         'artools-pkg-git'
         'artools-iso-git'
         'artools-yaml-git')
-pkgver=r63.1e4d2b7
+pkgver=r78.f0a5f0f
 pkgrel=1
 arch=('any')
 pkgdesc='Development tools for Artix'
