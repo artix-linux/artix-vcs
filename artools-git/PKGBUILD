@@ -9,14 +9,14 @@ pkgname=('artools-base-git'
         'artools-pkg-git'
         'artools-iso-git'
         'artools-yaml-git')
-pkgver=r78.f0a5f0f
+pkgver=r107.53c2b55
 pkgrel=1
 arch=('any')
 pkgdesc='Development tools for Artix'
 license=('GPL')
 groups=('artools-git')
 url='https://github.com/artix-linux/artools'
-makedepends=('git' 'docbook2x')
+makedepends=('git')
 source=("git+$url.git#branch=$_branch")
 sha256sums=('SKIP')
 
