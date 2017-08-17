@@ -1,16 +1,17 @@
 # Maintainer: artoo <artoo@manjaro.org>
 
 _pkgbase=artools
-_ver=0.4
+_ver=0.5
 _branch=devel
 
 pkgbase=artools-git
 pkgname=('artools-base-git'
         'artools-pkg-git'
+        'artools-iso-base-git'
         'artools-iso-git'
         'artools-yaml-git')
-pkgver=r107.53c2b55
-pkgrel=1
+pkgver=r131.0fcdc6a
+pkgrel=2
 arch=('any')
 pkgdesc='Development tools for Artix'
 license=('GPL')
@@ -82,3 +83,11 @@ package_artools-iso-git() {
     make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_iso
 }
 
+package_artools-iso-base-git() {
+    pkgdesc='Development tools for Artix (ISO base profile)'
+    provides=('artools-iso-base')
+    conflicts=('artools-iso-base')
+
+    cd ${srcdir}/${_pkgbase}
+    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_isobase
+}
