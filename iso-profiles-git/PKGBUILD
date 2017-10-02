@@ -4,7 +4,7 @@ _branch=master
 
 pkgbase=iso-profiles
 pkgname=('artix-iso-profiles-git')
-pkgver=r48.3151d1e
+pkgver=r78.cf02b1e
 pkgrel=1
 arch=('any')
 pkgdesc='Artix iso profiles'
@@ -22,7 +22,7 @@ pkgver() {
 package_artix-iso-profiles-git() {
     pkgdesc='Artix iso profiles'
 #     groups=('artools')
-    depends=("artools-yaml>=0.2")
+    depends=("artools-iso")
     conflicts=('artix-iso-profiles')
 
     cd ${pkgbase} #-${pkgver}
