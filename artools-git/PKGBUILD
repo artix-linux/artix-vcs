@@ -1,17 +1,16 @@
 # Maintainer: artoo <artoo@manjaro.org>
 
 _pkgbase=artools
-_ver=0.5
+_ver=0.6
 _branch=devel
 
 pkgbase=artools-git
 pkgname=('artools-base-git'
         'artools-pkg-git'
         'artools-iso-base-git'
-        'artools-iso-git'
-        'artools-yaml-git')
-pkgver=r131.0fcdc6a
-pkgrel=2
+        'artools-iso-git')
+pkgver=r235.fdeb9f8
+pkgrel=1
 arch=('any')
 pkgdesc='Development tools for Artix'
 license=('GPL')
@@ -62,22 +61,13 @@ package_artools-pkg-git() {
     make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_pkg
 }
 
-package_artools-yaml-git() {
-    pkgdesc='Development tools for Artix (yaml tools)'
-    provides=("artools-yaml=$_ver")
-    conflicts=('artools-yaml')
-    depends=('artools-base-git' 'artools-iso-base')
-
-    cd ${srcdir}/${_pkgbase}
-    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_yaml
-}
-
 package_artools-iso-git() {
     pkgdesc='Development tools for Artix (ISO tools)'
     provides=("artools-iso=$_ver")
-    depends=('dosfstools' 'libisoburn' 'squashfs-tools' 'artools-yaml-git'
-            'mkinitcpio' 'mktorrent' 'grub')
-    conflicts=('artools-iso')
+    depends=('dosfstools' 'libisoburn' 'squashfs-tools'
+            'mkinitcpio' 'mktorrent' 'grub' 'artools-base-git' 'artools-iso-base')
+    conflicts=('artools-iso' 'artools-yaml')
+    replaces=('artools-yaml')
 
     cd ${srcdir}/${_pkgbase}
     make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_iso
