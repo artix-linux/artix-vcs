@@ -1,0 +1,51 @@
+# Maintainer: Chris Cromer <cromer@artixlinux.org>
+# Maintainer: artoo <artoo@artixlinux.org>
+
+pkgname=opensysusers-git
+pkgver=r22.397e1eb
+pkgrel=2
+pkgdesc="A standalone utility for handling systemd-style sysusers.d users and groups"
+arch=('any')
+url="https://github.com/artix-linux/opensysusers"
+license=('BSD2')
+depends=('pacman')
+makedepends=('docbook-xsl')
+conflicts=('opensysusers')
+source=("git+$url.git#branch=makefiles"
+		'opensysusers.hook'
+		'sysusers-hook')
+sha256sums=('SKIP'
+            'e07d6258b37764190e4ab0f64d08ad9688b3a34b6c100be2d4aba970a8e26aee'
+            '115aed9c2688519b942b206171f5ab52919787e8d380875cab06954b1d878651')
+
+pkgver() {
+    cd opensysusers
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare(){
+    cd opensysusers
+}
+
+check(){
+cd opensysusers
+make install-tests
+}
+
+build(){
+    cd opensysusers
+    make PREFIX=/usr DESTDIR="${pkgdir}"
+}
+
+package() {
+    cd opensysusers
+    make PREFIX=/usr DESTDIR="${pkgdir}" install
+
+    install -vDm0755 openrc/opensysusers.initd "${pkgdir}"/etc/init.d/opensysusers
+    install -dm0755 "${pkgdir}/etc/runlevels/boot"
+    ln -snf "/etc/init.d/opensysusers" "${pkgdir}/etc/runlevels/boot/opensysusers"
+
+    # pacman hooks
+    install -Dm755 ${srcdir}/sysusers-hook "$pkgdir"/usr/share/libalpm/scripts/sysusers-hook
+    install -Dm644 -t "$pkgdir"/usr/share/libalpm/hooks ${srcdir}/*.hook
+}
