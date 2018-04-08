@@ -2,16 +2,17 @@
 # Maintainer: artoo <artoo@artixlinux.org>
 
 pkgname=opensysusers-git
-pkgver=r22.397e1eb
-pkgrel=2
+pkgver=r23.7955ec9
+pkgrel=1
 pkgdesc="A standalone utility for handling systemd-style sysusers.d users and groups"
 arch=('any')
 url="https://github.com/artix-linux/opensysusers"
 license=('BSD2')
+provides=('opensysusers')
 depends=('pacman')
 makedepends=('docbook-xsl')
 conflicts=('opensysusers')
-source=("git+$url.git#branch=makefiles"
+source=("git+$url.git"
 		'opensysusers.hook'
 		'sysusers-hook')
 sha256sums=('SKIP'
@@ -25,11 +26,6 @@ pkgver() {
 
 prepare(){
     cd opensysusers
-}
-
-check(){
-cd opensysusers
-make install-tests
 }
 
 build(){
