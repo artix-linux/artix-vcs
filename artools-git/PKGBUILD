@@ -8,8 +8,8 @@ pkgname=('artools-base-git'
         'artools-pkg-git'
         'artools-iso-base-git'
         'artools-iso-git')
-pkgver=0.7.6.1.r15.g3e4fbd8
-pkgrel=2
+pkgver=0.7.6.1.r18.gd5c8af7
+pkgrel=1
 arch=('any')
 pkgdesc='Development tools for Artix'
 license=('GPL')
@@ -69,6 +69,7 @@ package_artools-iso-git() {
 
     cd ${srcdir}/${_pkgbase}
     make PREFIX=/usr DESTDIR=${pkgdir} install_iso
+    make SYSCONFDIR=/etc DESTDIR=${pkgdir} install_cpio
 }
 
 package_artools-iso-base-git() {
