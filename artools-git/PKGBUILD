@@ -1,14 +1,13 @@
-# Maintainer: artoo <artoo@manjaro.org>
+# Maintainer: artoo <artoo@artixlinux.org>
 
 _pkgbase=artools
-_branch=devel
+_branch=master
 
 pkgbase=artools-git
 pkgname=('artools-base-git'
         'artools-pkg-git'
-        'artools-iso-base-git'
         'artools-iso-git')
-pkgver=0.7.6.1.r18.gd5c8af7
+pkgver=0.8.r0.g1c56ce7
 pkgrel=1
 arch=('any')
 pkgdesc='Development tools for Artix'
@@ -22,12 +21,13 @@ sha256sums=('SKIP')
 prepare() {
     cd ${srcdir}/${_pkgbase}
     # patches here
-    sed -e "s/^Version=.*/Version=$pkgver/" -i Makefile
+    sed -e "s/^VERSION=.*/VERSION=$pkgver/" -i Makefile
 }
 
 pkgver() {
     cd ${srcdir}/${_pkgbase}
     git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+    #git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
@@ -40,8 +40,7 @@ package_artools-base-git() {
     provides=("artools-base=$_ver")
     depends=('openssh' 'rsync' 'haveged' 'os-prober' 'gnupg' 'pacman')
     optdepends=('artools-pkg: Artix package tools'
-                'artools-iso: Artix iso tools'
-                'artools-yaml: Artix yaml tools')
+                'artools-iso: Artix iso tools')
     conflicts=('artools-base')
     backup=('etc/artools/artools.conf')
 
@@ -63,20 +62,10 @@ package_artools-iso-git() {
     pkgdesc='Development tools for Artix (ISO tools)'
     provides=("artools-iso=$_ver")
     depends=('dosfstools' 'libisoburn' 'squashfs-tools'
-            'mkinitcpio' 'mktorrent' 'grub' 'artools-base-git' 'artools-iso-base')
-    conflicts=('artools-iso' 'artools-yaml')
-    replaces=('artools-yaml')
+            'mkinitcpio' 'mktorrent' 'grub' 'artools-base-git')
+    conflicts=('artools-iso' 'artools-iso-base')
+    replaces=('artools-iso-base')
 
     cd ${srcdir}/${_pkgbase}
     make PREFIX=/usr DESTDIR=${pkgdir} install_iso
-    make SYSCONFDIR=/etc DESTDIR=${pkgdir} install_cpio
-}
-
-package_artools-iso-base-git() {
-    pkgdesc='Development tools for Artix (ISO base profile)'
-    provides=('artools-iso-base')
-    conflicts=('artools-iso-base')
-
-    cd ${srcdir}/${_pkgbase}
-    make PREFIX=/usr DESTDIR=${pkgdir} install_base_profile
 }
