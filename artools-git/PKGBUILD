@@ -1,7 +1,6 @@
 # Maintainer: artoo <artoo@manjaro.org>
 
 _pkgbase=artools
-_ver=0.6
 _branch=devel
 
 pkgbase=artools-git
@@ -9,8 +8,8 @@ pkgname=('artools-base-git'
         'artools-pkg-git'
         'artools-iso-base-git'
         'artools-iso-git')
-pkgver=r235.fdeb9f8
-pkgrel=1
+pkgver=0.7.6.1.r15.g3e4fbd8
+pkgrel=2
 arch=('any')
 pkgdesc='Development tools for Artix'
 license=('GPL')
@@ -23,18 +22,17 @@ sha256sums=('SKIP')
 prepare() {
     cd ${srcdir}/${_pkgbase}
     # patches here
-    sed -e "s/^Version=.*/Version=$_ver/" -i Makefile
-    #sed -e "s/^Version=.*/Version=$pkgver/" -i Makefile
+    sed -e "s/^Version=.*/Version=$pkgver/" -i Makefile
 }
 
 pkgver() {
     cd ${srcdir}/${_pkgbase}
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
     cd ${srcdir}/${_pkgbase}
-    make SYSCONFDIR=/etc PREFIX=/usr
+    make PREFIX=/usr
 }
 
 package_artools-base-git() {
@@ -48,17 +46,17 @@ package_artools-base-git() {
     backup=('etc/artools/artools.conf')
 
     cd ${srcdir}/${_pkgbase}
-    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_base
+    make PREFIX=/usr DESTDIR=${pkgdir} install_base
 }
 
 package_artools-pkg-git() {
     pkgdesc='Development tools for Artix (packaging tools)'
     provides=("artools-pkg=$_ver")
-    depends=('namcap' 'artools-base-git')
+    depends=('namcap' 'artools-base-git' 'git')
     conflicts=('artools-pkg' 'devtools')
 
     cd ${srcdir}/${_pkgbase}
-    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_pkg
+    make PREFIX=/usr DESTDIR=${pkgdir} install_pkg
 }
 
 package_artools-iso-git() {
@@ -70,7 +68,7 @@ package_artools-iso-git() {
     replaces=('artools-yaml')
 
     cd ${srcdir}/${_pkgbase}
-    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_iso
+    make PREFIX=/usr DESTDIR=${pkgdir} install_iso
 }
 
 package_artools-iso-base-git() {
@@ -79,5 +77,5 @@ package_artools-iso-base-git() {
     conflicts=('artools-iso-base')
 
     cd ${srcdir}/${_pkgbase}
-    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_isobase
+    make PREFIX=/usr DESTDIR=${pkgdir} install_base_profile
 }
