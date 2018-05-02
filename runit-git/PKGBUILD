@@ -1,0 +1,86 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+_url=https://github.com/artix-linux/runit-artix
+_pkgver=20180414
+_pkgname=runit-artix
+_branch=core-split-patch
+_servicedir=/run/runit/service
+
+_name=runit
+
+pkgname=runit-git
+pkgver=2.1.2
+pkgrel=7
+pkgdesc='runit is a cross-platform Unix init scheme with service supervision'
+arch=('x86_64')
+url='http://smarden.org/runit/'
+license=('BSD3')
+depends=('procps-ng' 'awk' 'bash' 'elogind-runit' 'opentmpfiles')
+provides=('svc-manager' 'runit-artix' 'runit' 'init-kmod' 'init-eudev')
+conflicts=('svc-manager' 'runit-artix' 'runit' 'init-kmod' 'init-eudev')
+replaces=('runit-artix')
+backup=('etc/rc/rc.conf'
+        'etc/rc/rc.local'
+        'etc/rc/rc.shutdown')
+source=("http://smarden.org/${_name}/${_name}-${pkgver}.tar.gz"
+        "git+${_url}.git#branch=${_branch}"
+        "clearmem.patch"
+        "svlogd.patch"
+        "utmpset-time_t.patch")
+sha256sums=('6fd0160cb0cf1207de4e66754b6d39750cff14bb0aa66ab49490992c0c47ba18'
+            'SKIP'
+            '19b5e99135f153d07052f2dff707430af9faeabc717a5740ea58a8a783f609de'
+            '9cf269264c0713975be1b3bc9dd3b5b3bb1e2078ac596527370a902d8d025a5a'
+            '527f68f501cc9eb4bbab33f8ad374822624342c7d74b5c795efe4aac6b3f170a')
+
+prepare() {
+	# set default service path to /run/runit/service
+	cd "${srcdir}/admin/${_name}-${pkgver}"
+	sed -i 's|"/service/"|"/run/runit/service/"|' src/sv.c
+
+	# apply patches
+	patch -p1 -i "${srcdir}/clearmem.patch"
+	patch -p1 -i "${srcdir}/svlogd.patch"
+	patch -p1 -i "${srcdir}/utmpset-time_t.patch"
+}
+
+build() {
+	cd "${srcdir}/${_pkgname}" #-${_pkgver}"
+	make SERVICEDIR="${_servicedir}"
+
+	cd "${srcdir}/admin/${_name}-${pkgver}"
+
+	CFLAGS="${CFLAGS} -static"
+	LDFLAGS="${LDFLAGS} -static"
+
+	package/compile
+
+}
+
+check() {
+	cd "${srcdir}/admin/${_name}-${pkgver}"
+	package/check
+}
+
+package() {
+	# commands
+	install -dm755 "${pkgdir}/usr/bin"
+	install -Dm755 ${srcdir}/admin/${_name}-${pkgver}/command/* "${pkgdir}/usr/bin"
+
+	# man pages
+	install -dm755 "${pkgdir}/usr/share/man/man8"
+	install -Dm644 ${srcdir}/admin/${_name}-${pkgver}/man/* "${pkgdir}/usr/share/man/man8"
+
+	# default directories
+	install -d "$pkgdir/etc/runit/runsvdir/default"
+
+	# license
+	install -Dm644 "${srcdir}/admin/${_name}-${pkgver}/package/COPYING" "$pkgdir/usr/share/licenses/${_name}/COPYING"
+
+	cd "${srcdir}/${_pkgname}" #-${_pkgver}"
+	make DESTDIR="${pkgdir}" PREFIX="/usr" SERVICEDIR="${_servicedir}" install
+
+	# License
+	install -dm755 "${pkgdir}"/usr/share/licenses/${_name}
+	sed -n '/To the extent/,/0/p' README.md > "${pkgdir}"/usr/share/licenses/${_name}/LICENSE
+}
