@@ -4,6 +4,8 @@ _url=https://github.com/artix-linux/runit-artix
 _pkgver=20180414
 _pkgname=runit-artix
 _branch=core-split-patch
+
+# set default service path to /run/runit/service
 _servicedir=/run/runit/service
 
 _name=runit
@@ -16,8 +18,10 @@ arch=('x86_64')
 url='http://smarden.org/runit/'
 license=('BSD3')
 depends=('procps-ng' 'awk' 'bash' 'elogind-runit' 'opentmpfiles')
-provides=('svc-manager' 'runit-artix' 'runit' 'init-kmod' 'init-eudev')
-conflicts=('svc-manager' 'runit-artix' 'runit' 'init-kmod' 'init-eudev')
+provides=('svc-manager' 'runit-artix' 'runit'
+        'init-kmod' 'init-udev' 'init-opentmpfiles' 'init-opensysusers')
+conflicts=('svc-manager' 'runit-artix' 'runit'
+        'init-kmod' 'init-udev' 'init-opentmpfiles' 'init-opensysusers')
 replaces=('runit-artix')
 backup=('etc/rc/rc.conf'
         'etc/rc/rc.local'
@@ -34,9 +38,8 @@ sha256sums=('6fd0160cb0cf1207de4e66754b6d39750cff14bb0aa66ab49490992c0c47ba18'
             '527f68f501cc9eb4bbab33f8ad374822624342c7d74b5c795efe4aac6b3f170a')
 
 prepare() {
-	# set default service path to /run/runit/service
 	cd "${srcdir}/admin/${_name}-${pkgver}"
-	sed -i 's|"/service/"|"/run/runit/service/"|' src/sv.c
+	sed -i "s|/service/|${_servicedir}/|" src/sv.c
 
 	# apply patches
 	patch -p1 -i "${srcdir}/clearmem.patch"
@@ -54,7 +57,6 @@ build() {
 	LDFLAGS="${LDFLAGS} -static"
 
 	package/compile
-
 }
 
 check() {
