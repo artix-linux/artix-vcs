@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 _url=https://github.com/artix-linux/runit-artix
-_pkgver=20180414
+# _pkgver=20180414
 _pkgname=runit-artix
-_branch=core-split-patch
+_branch=runit-rc
 
 # set default service path to /run/runit/service
 _servicedir=/run/runit/service
@@ -12,12 +12,13 @@ _name=runit
 
 pkgname=runit-git
 pkgver=2.1.2
-pkgrel=7
+pkgrel=8
 pkgdesc='runit is a cross-platform Unix init scheme with service supervision'
 arch=('x86_64')
 url='http://smarden.org/runit/'
 license=('BSD3')
 depends=('procps-ng' 'awk' 'bash' 'elogind-runit' 'opentmpfiles')
+makedepends=('git')
 provides=('svc-manager' 'runit-artix' 'runit'
         'init-kmod' 'init-udev' 'init-opentmpfiles' 'init-opensysusers')
 conflicts=('svc-manager' 'runit-artix' 'runit'
