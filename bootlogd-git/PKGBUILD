@@ -1,0 +1,33 @@
+# Maintainer: artoo <artoo@artixlinux.org>
+
+_pkgname=bootlogd
+
+pkgname=bootlogd-git
+pkgver=2.88
+pkgrel=1
+arch=('x86_64')
+pkgdesc='Bootlogd extracted from sysvinit'
+license=('GPL')
+url='https://github.com/artix-linux/bootlogd'
+depends=('glibc' 'procps-ng')
+makedepends=('git')
+provides=('bootlogd')
+conflicts=('bootlogd')
+source=("git+$url.git")
+sha256sums=('SKIP')
+
+# pkgver() {
+#     cd ${_pkgname}
+#     git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+#     #git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+# }
+
+build() {
+    cd ${_pkgname}
+    make
+}
+
+package() {
+    cd ${_pkgname}
+    make DESTDIR=${pkgdir} install
+}
