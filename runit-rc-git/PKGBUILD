@@ -1,0 +1,39 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+_pkgname=runit-artix
+_servicedir=/run/runit/service
+_branch=rcd
+
+pkgname=runit-rc-git
+pkgver=20180506.r18.g30019b9
+pkgrel=1
+pkgdesc='Artix Linux runit initscripts'
+arch=('x86_64')
+url='https://github.com/artix-linux/runit-artix'
+license=('BSD')
+backup=('etc/rc/rc.local'
+        'etc/rc/rc.shutdown'
+        'etc/rc/rc.conf')
+depends=('procps-ng' 'awk' 'bash' 'opentmpfiles' 'bootlogd')
+provides=('init-kmod' 'init-udev' 'init-opentmpfiles' 'init-opensysusers' 'runit-rc')
+conflicts=('init-kmod' 'init-udev' 'init-opentmpfiles' 'init-opensysusers' 'runit-rc')
+source=("git+${url}.git#branch=${_branch}")
+sha256sums=('SKIP')
+optdepends=('lvm2-runit: LVM support for runit'
+            'cryptsetup-runit: Enable boot support for encrypted partitions')
+
+pkgver() {
+    cd ${_pkgname}
+    git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+    #git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	cd "${_pkgname}"
+	make SERVICEDIR="${_servicedir}"
+}
+
+package() {
+	cd "${_pkgname}"
+	make DESTDIR="${pkgdir}" PREFIX="/usr" SERVICEDIR="${_servicedir}" install-rc
+}
