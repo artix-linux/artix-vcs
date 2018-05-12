@@ -1,39 +1,34 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
-_pkgname=runit-artix
-_servicedir=/run/runit/service
-_branch=rcd
-
 pkgname=runit-rc-git
-pkgver=20180506.r23.g54f3a20
+pkgver=r2.d0a73d8
 pkgrel=1
 pkgdesc='Artix Linux runit initscripts'
 arch=('x86_64')
-url='https://github.com/artix-linux/runit-artix'
+url='https://github.com/artix-linux/runit-rc'
 license=('BSD')
-backup=('etc/rc/rc.local'
-        'etc/rc/rc.shutdown.local'
-        'etc/rc/rc.conf')
-depends=('procps-ng' 'awk' 'bash' 'opentmpfiles' 'bootlogd')
+backup=('etc/rc/rc.conf')
+depends=('procps-ng' 'bash' 'opentmpfiles' 'bootlogd')
 provides=('init-kmod' 'init-udev' 'init-opentmpfiles' 'init-opensysusers' 'runit-rc')
 conflicts=('init-kmod' 'init-udev' 'init-opentmpfiles' 'init-opensysusers' 'runit-rc')
-source=("git+${url}.git#branch=${_branch}")
+source=("git+${url}.git")
 sha256sums=('SKIP')
 optdepends=('lvm2-runit: LVM support for runit'
             'cryptsetup-runit: Enable boot support for encrypted partitions')
 
 pkgver() {
-    cd ${_pkgname}
-    git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+    cd runit-rc
+    #git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
     #git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
-	cd "${_pkgname}"
-	make SERVICEDIR="${_servicedir}"
+	cd runit-rc
+	make
 }
 
 package() {
-	cd "${_pkgname}"
-	make DESTDIR="${pkgdir}" PREFIX="/usr" SERVICEDIR="${_servicedir}" install-rc
+	cd runit-rc
+	make PREFIX="/usr" DESTDIR="${pkgdir}" install
 }
